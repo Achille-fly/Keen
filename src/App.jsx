@@ -1215,6 +1215,13 @@ export default function App() {
   if (phase==="intro") return (
     <div style={{minHeight:"100vh", background:C.bg, color:C.text, fontFamily:"Georgia,serif", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", padding:"2rem 1rem"}}>
       <div style={{maxWidth:560, textAlign:"center"}}>
+        {/* KEEN branding */}
+        <div style={{marginBottom:40}}>
+          <link href="https://api.fontshare.com/v2/css?f[]=satoshi@700,400&display=swap" rel="stylesheet"/>
+          <div style={{fontSize:"clamp(36px,8vw,64px)", fontWeight:700, letterSpacing:"0.25em", color:C.text, fontFamily:"'Satoshi', sans-serif", lineHeight:1}}>KEEN</div>
+          <div style={{width:40, height:1, background:C.accent, margin:"10px auto 10px", opacity:0.7}}/>
+          <div style={{fontSize:12, letterSpacing:"0.2em", color:C.muted, fontFamily:"'Satoshi', sans-serif", textTransform:"uppercase"}}>See clearly. Decide better.</div>
+        </div>
         <div style={{fontSize:52, marginBottom:20}}>🧠</div>
         <h1 style={{fontSize:"clamp(28px,5vw,46px)", fontWeight:400, letterSpacing:"-0.02em", marginBottom:12, lineHeight:1.2}}>
           What kind of trader<br/><span style={{color:C.accent}}>are you, really?</span>
