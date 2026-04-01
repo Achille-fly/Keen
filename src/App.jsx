@@ -1213,7 +1213,7 @@ export default function App() {
   if (phase==="results" && result) return <Results scores={result.scores} archetypeKey={result.archetypeKey} behav={result.behav} onRestart={restart}/>;
 
   if (phase==="intro") return (
-    <div style={{minHeight:"100vh", background:C.bg, color:C.text, fontFamily:"Georgia,serif", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", padding:"2rem 1rem"}}>
+    <div style={{minHeight:"100vh", width:"100vw", background:"#0A0A0F", color:"#E8E4DC", fontFamily:"Georgia,serif", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", padding:"2rem 1rem", boxSizing:"border-box", margin:0}}>
       <div style={{maxWidth:560, textAlign:"center"}}>
         {/* KEEN branding */}
         <div style={{marginBottom:40}}>
@@ -1250,15 +1250,6 @@ export default function App() {
 
   return (
     <div style={{minHeight:"100vh", background:C.bg, color:C.text, fontFamily:"sans-serif", display:"flex", flexDirection:"column", alignItems:"center", padding:"2rem 1rem"}}>
-      <div style={{width:"100%", maxWidth:600, marginBottom:28}}>
-        <div style={{display:"flex", justifyContent:"space-between", marginBottom:6}}>
-          <span style={{fontSize:12, color:C.muted}}>Question {currentQ+1} / {questions.length}</span>
-          <span style={{fontSize:12, color:C.accent}}>{Math.round(progress)}%</span>
-        </div>
-        <div style={{background:C.border, borderRadius:4, height:4}}>
-          <div style={{width:`${progress}%`, height:"100%", background:C.accent, borderRadius:4, transition:"width 0.4s ease"}}/>
-        </div>
-      </div>
       {q && optMap[q.id] && (
         <div style={{width:"100%", maxWidth:600}}>
           <h2 style={{fontSize:"clamp(17px,2.8vw,22px)", fontWeight:400, lineHeight:1.5, color:C.text, marginBottom:28, fontFamily:"Georgia,serif"}}>{q.text}</h2>
@@ -1275,6 +1266,15 @@ export default function App() {
           <button onClick={handleNext} disabled={selected===null} style={{width:"100%", background:selected!==null?C.accent:C.border, color:selected!==null?"#0A0A0F":C.dim, border:"none", borderRadius:8, padding:"15px", fontSize:14, fontWeight:700, cursor:selected!==null?"pointer":"not-allowed", transition:"all 0.2s", letterSpacing:"0.05em"}}>
             {currentQ<questions.length-1?"NEXT QUESTION →":"SEE MY ANALYSIS →"}
           </button>
+          <div style={{width:"100%", marginTop:28}}>
+            <div style={{display:"flex", justifyContent:"space-between", marginBottom:6}}>
+              <span style={{fontSize:12, color:C.muted}}>Question {currentQ+1} / {questions.length}</span>
+              <span style={{fontSize:12, color:C.accent}}>{Math.round(progress)}%</span>
+            </div>
+            <div style={{background:C.border, borderRadius:4, height:4}}>
+              <div style={{width:`${progress}%`, height:"100%", background:C.accent, borderRadius:4, transition:"width 0.4s ease"}}/>
+            </div>
+          </div>
         </div>
       )}
     </div>
