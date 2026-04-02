@@ -1213,8 +1213,8 @@ export default function App() {
   if (phase==="results" && result) return <Results scores={result.scores} archetypeKey={result.archetypeKey} behav={result.behav} onRestart={restart}/>;
 
   if (phase==="intro") return (
-    <div style={{minHeight:"100vh", width:"100vw", background:"#0A0A0F", color:"#E8E4DC", fontFamily:"Georgia,serif", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", padding:"2rem 1rem", boxSizing:"border-box", margin:0}}>
-      <div style={{maxWidth:560, textAlign:"center"}}>
+    <div style={{minHeight:"100vh", width:"100%", background:C.bg, color:C.text, fontFamily:"Georgia,serif", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", padding:"2rem 1rem", boxSizing:"border-box"}}>
+      <div style={{maxWidth:560, width:"100%", textAlign:"center"}}>
         {/* KEEN branding */}
         <div style={{marginBottom:40}}>
           <link href="https://api.fontshare.com/v2/css?f[]=satoshi@700,400&display=swap" rel="stylesheet"/>
@@ -1227,7 +1227,7 @@ export default function App() {
           What kind of trader<br/><span style={{color:C.accent}}>are you, really?</span>
         </h1>
         <p style={{color:C.muted, fontSize:15, lineHeight:1.75, marginBottom:36, fontFamily:"sans-serif"}}>
-          40 general psychology questions — no trading questions — to reveal your deep trader profile and the biases that will sabotage your performance.
+          40 general psychology questions — to reveal your deep trader profile and the biases that will sabotage your performance.
         </p>
         <div style={{display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:12, marginBottom:36}}>
           {[["⏱","12–15 min","Estimated time"],["🔬","8 dimensions","Psychometric"],["📈","Full guide","Included in premium"]].map(([icon,label,sub]) => (
@@ -1249,7 +1249,12 @@ export default function App() {
   );
 
   return (
-    <div style={{minHeight:"100vh", background:C.bg, color:C.text, fontFamily:"sans-serif", display:"flex", flexDirection:"column", alignItems:"center", padding:"2rem 1rem"}}>
+    <div style={{minHeight:"100vh", width:"100%", background:C.bg, color:C.text, fontFamily:"sans-serif", display:"flex", flexDirection:"column", alignItems:"center", padding:"2rem 1rem", boxSizing:"border-box"}}>
+      {/* KEEN branding */}
+      <div style={{textAlign:"center", marginBottom:32}}>
+        <div style={{fontSize:20, fontWeight:700, letterSpacing:"0.25em", color:C.text, fontFamily:"'Satoshi', sans-serif"}}>KEEN</div>
+        <div style={{width:24, height:1, background:C.accent, margin:"6px auto 0", opacity:0.7}}/>
+      </div>
       {q && optMap[q.id] && (
         <div style={{width:"100%", maxWidth:600}}>
           <h2 style={{fontSize:"clamp(17px,2.8vw,22px)", fontWeight:400, lineHeight:1.5, color:C.text, marginBottom:28, fontFamily:"Georgia,serif"}}>{q.text}</h2>
@@ -1266,7 +1271,8 @@ export default function App() {
           <button onClick={handleNext} disabled={selected===null} style={{width:"100%", background:selected!==null?C.accent:C.border, color:selected!==null?"#0A0A0F":C.dim, border:"none", borderRadius:8, padding:"15px", fontSize:14, fontWeight:700, cursor:selected!==null?"pointer":"not-allowed", transition:"all 0.2s", letterSpacing:"0.05em"}}>
             {currentQ<questions.length-1?"NEXT QUESTION →":"SEE MY ANALYSIS →"}
           </button>
-          <div style={{width:"100%", marginTop:28}}>
+          {/* Progress bar below button */}
+          <div style={{width:"100%", marginTop:24}}>
             <div style={{display:"flex", justifyContent:"space-between", marginBottom:6}}>
               <span style={{fontSize:12, color:C.muted}}>Question {currentQ+1} / {questions.length}</span>
               <span style={{fontSize:12, color:C.accent}}>{Math.round(progress)}%</span>
@@ -1280,4 +1286,3 @@ export default function App() {
     </div>
   );
 }
- 
