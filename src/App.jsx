@@ -1227,7 +1227,7 @@ export default function App() {
           What kind of trader<br/><span style={{color:C.accent}}>are you, really?</span>
         </h1>
         <p style={{color:C.muted, fontSize:15, lineHeight:1.75, marginBottom:36, fontFamily:"sans-serif"}}>
-          40 general psychology questions — no trading questions — to reveal your deep trader profile and the biases that will sabotage your performance.
+          40 general psychology questions — to reveal your deep trader profile and the biases that will sabotage your performance.
         </p>
         <div style={{display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:12, marginBottom:36}}>
           {[["⏱","12–15 min","Estimated time"],["🔬","8 dimensions","Psychometric"],["📈","Full guide","Included in premium"]].map(([icon,label,sub]) => (
