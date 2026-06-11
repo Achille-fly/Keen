@@ -944,14 +944,53 @@ function TradingSection({arch}) {
 function Results({scores, archetypeKey, behav, onRestart}) {
   const [premium, setPremium] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [legalModal, setLegalModal] = useState(null);
   const arch = ARCHETYPES[archetypeKey];
   const unlock = () => { setPremium(true); setShowModal(false); };
   const openModal = () => setShowModal(true);
-  if (!arch) return <div style={{background:C.bg, minHeight:"100vh", display:"flex", alignItems:"center", justifyContent:"center"}}><p style={{color:C.danger}}>Profile error.</p></div>;
+
+  const LEGAL_R = {
+    terms:{title:"Terms and Conditions",sections:[{h:"Parties",p:"VETSMANY Vilayvanh Celine, micro-entrepreneur, SIRET: 104314729 — support.keen@gmail.com"},{h:"Product",p:"Keen is a self-reflection and educational tool. Results do not constitute financial advice."},{h:"Price",p:"$19.99. VAT not applicable (Art. 293B French Tax Code)."},{h:"Payment",p:"Via Stripe. Card details never transmitted to the Seller."},{h:"Access",p:"Immediate upon payment. Personal and non-transferable."},{h:"Refunds",p:"No refund once access granted. For technical issues: support.keen@gmail.com"},{h:"Liability",p:"The Seller is not liable for trading decisions made based on results."},{h:"Governing law",p:"French law. Contact support.keen@gmail.com for any dispute."}]},
+    legal:{title:"Legal Notice",sections:[{h:"Publisher",p:"VETSMANY Vilayvanh Celine\nSIRET: 104314729\nsupport.keen@gmail.com\nVAT not applicable"},{h:"Hosting",p:"Vercel Inc., 440 N Barranca Ave #4133, Covina, CA 91723, USA"},{h:"Intellectual property",p:"All content on keen-xi.vercel.app is protected by copyright. Reproduction prohibited without authorization."},{h:"Cookies",p:"Technical and Stripe cookies only. No advertising cookies."}]},
+    privacy:{title:"Privacy Policy",sections:[{h:"Controller",p:"VETSMANY Vilayvanh Celine — support.keen@gmail.com"},{h:"Data collected",p:"Email (purchase only), payment data via Stripe, questionnaire answers and result. No sensitive data collected."},{h:"Usage",p:"Order processing, product delivery, product improvement. We never sell your data."},{h:"Your rights",p:"Access, rectification, erasure, portability. Email support.keen@gmail.com. EU: CNIL (cnil.fr). California: CCPA rights apply."},{h:"Security",p:"Stripe (PCI-DSS certified), HTTPS. No advertising cookies."}]},
+  };
+
+  const LegalModalR = () => {
+    if (!legalModal) return null;
+    const doc = LEGAL_R[legalModal];
+    return (
+      <div onClick={()=>setLegalModal(null)} style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.92)",display:"flex",alignItems:"center",justifyContent:"center",zIndex:2000,padding:"1rem"}}>
+        <div onClick={e=>e.stopPropagation()} style={{background:C.card,border:`1px solid ${C.border}`,borderRadius:16,padding:"2rem",maxWidth:620,width:"100%",maxHeight:"85vh",overflowY:"auto",position:"relative"}}>
+          <button onClick={()=>setLegalModal(null)} style={{position:"absolute",top:14,right:18,background:"transparent",border:"none",color:C.muted,fontSize:20,cursor:"pointer"}}>✕</button>
+          <h2 style={{fontSize:18,fontWeight:600,color:C.text,marginBottom:24,fontFamily:"Georgia,serif"}}>{doc.title}</h2>
+          {doc.sections.map((s,i)=>(
+            <div key={i} style={{marginBottom:20}}>
+              <p style={{fontSize:11,fontWeight:700,color:C.accent,marginBottom:6,letterSpacing:"0.05em",textTransform:"uppercase"}}>{s.h}</p>
+              <p style={{fontSize:13,color:C.muted,lineHeight:1.7,whiteSpace:"pre-line"}}>{s.p}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  };
+
+  const FooterR = () => (
+    <div style={{borderTop:`1px solid ${C.border}`,marginTop:48,padding:"24px 0 32px",textAlign:"center"}}>
+      <p style={{fontSize:11,color:C.dim,marginBottom:12}}>Questions? <a href="mailto:support.keen@gmail.com" style={{color:C.muted,textDecoration:"none"}}>support.keen@gmail.com</a></p>
+      <div style={{display:"flex",justifyContent:"center",gap:24}}>
+        {[["Terms & Conditions","terms"],["Legal Notice","legal"],["Privacy Policy","privacy"]].map(([label,key])=>(
+          <button key={key} onClick={()=>setLegalModal(key)} style={{background:"none",border:"none",color:C.dim,fontSize:11,cursor:"pointer",textDecoration:"underline",padding:0}}>{label}</button>
+        ))}
+      </div>
+    </div>
+  );
+
+  if (!arch) return <div style={{background:C.bg,minHeight:"100vh",display:"flex",alignItems:"center",justifyContent:"center"}}><p style={{color:C.danger}}>Profile error.</p></div>;
 
   return (
     <div style={{minHeight:"100vh", background:C.bg, color:C.text, fontFamily:"sans-serif", padding:"2rem 1rem"}}>
       {showModal && <PremiumModal archetypeKey={archetypeKey} onClose={() => setShowModal(false)} onUnlock={unlock}/>}
+      <LegalModalR/>
       <div style={{maxWidth:740, margin:"0 auto"}}>
 
         {/* Header */}
@@ -1152,11 +1191,12 @@ function Results({scores, archetypeKey, behav, onRestart}) {
           </div>
         )}
 
-        <div style={{textAlign:"center", paddingBottom:48}}>
+        <div style={{textAlign:"center", paddingBottom:24}}>
           <button onClick={onRestart} style={{background:"transparent", border:`1px solid ${C.border}`, color:C.muted, borderRadius:8, padding:"10px 24px", cursor:"pointer", fontSize:13}}>
             Restart (new set of questions)
           </button>
         </div>
+        <FooterR/>
       </div>
     </div>
   );
@@ -1212,8 +1252,88 @@ export default function App() {
 
   if (phase==="results" && result) return <Results scores={result.scores} archetypeKey={result.archetypeKey} behav={result.behav} onRestart={restart}/>;
 
+  // ── LEGAL MODAL ──
+  const [legalModal, setLegalModal] = useState(null); // 'terms' | 'legal' | 'privacy'
+
+  const LEGAL_CONTENT = {
+    terms: {
+      title: "Terms and Conditions of Sale",
+      sections: [
+        { h: "Article 1 — Parties", p: "These Terms govern the contractual relationship between VETSMANY Vilayvanh Celine, sole trader (micro-entrepreneur), SIRET: 104314729, email: support.keen@gmail.com (the Seller) and any individual placing an order on keen-xi.vercel.app (the Customer). By completing a purchase, the Customer agrees to these Terms in full." },
+        { h: "Article 2 — Product description", p: "Keen is an online questionnaire designed to help traders identify their behavioral profile and trading archetype. It is a self-reflection and educational tool only. The results provided are indicative and do not constitute financial advice, psychological diagnosis, or any guarantee of trading performance. The product is delivered as digital content — no physical item is shipped." },
+        { h: "Article 3 — Price", p: "The product is priced at $19.99. VAT is not applicable pursuant to Article 293 B of the French General Tax Code. Prices may be updated at any time. The price applicable is the one displayed at the time of purchase." },
+        { h: "Article 4 — Order and payment", p: "Orders are completed via Stripe, a secure third-party payment processor. Payment is due immediately upon ordering. Card details are processed exclusively by Stripe and are never transmitted to the Seller." },
+        { h: "Article 5 — Access to the product", p: "Access is granted immediately upon payment confirmation. Access is strictly personal and non-transferable. Any reproduction, sharing, or redistribution of content is prohibited." },
+        { h: "Article 6 — Refund and cancellation policy", p: "Due to the immediate digital nature of the product, no refund can be issued once access has been granted. EU customers: in accordance with Article L221-28 of the French Consumer Code, the right of withdrawal does not apply to digital content for which performance has begun with the consumer's prior consent. For any technical issue preventing access, contact support.keen@gmail.com." },
+        { h: "Article 7 — Limitation of liability", p: "Keen is a self-reflection tool. The Seller shall not be held liable for any trading losses or financial decisions made based on questionnaire results, or for any indirect, incidental, or consequential damages. The Seller's total liability shall in no event exceed the amount paid by the Customer." },
+        { h: "Article 8 — Intellectual property", p: "All content on the site and within the product is the exclusive property of the Seller and is protected under French and international intellectual property law. Any reproduction or commercial use without prior written consent is strictly prohibited." },
+        { h: "Article 9 — Governing law", p: "These Terms are governed by French law. For any complaint, contact us at support.keen@gmail.com. We will make every effort to resolve issues amicably." },
+      ]
+    },
+    legal: {
+      title: "Legal Notice",
+      sections: [
+        { h: "Site publisher", p: "VETSMANY Vilayvanh Celine\nSole trader (micro-entrepreneur) — SIRET: 104314729\nEmail: support.keen@gmail.com\nVAT not applicable — Article 293 B of the French General Tax Code" },
+        { h: "Publication director", p: "VETSMANY Vilayvanh Celine" },
+        { h: "Hosting", p: "Vercel Inc.\n440 N Barranca Ave #4133\nCovina, CA 91723, United States\nvercel.com" },
+        { h: "Intellectual property", p: "All content published on keen-xi.vercel.app — including texts, the questionnaire, results, design, and logo — is protected by copyright. Any reproduction or representation, in whole or in part, is prohibited without express prior written authorization." },
+        { h: "Personal data", p: "The site collects personal data as part of order processing. In accordance with the GDPR, users have the right to access, correct, and delete their data. Contact: support.keen@gmail.com." },
+        { h: "Cookies", p: "The site uses technical cookies necessary for its operation and Stripe cookies for payment processing. These strictly necessary cookies do not require prior consent." },
+        { h: "Disclaimer", p: "The publisher makes every effort to ensure the accuracy and currency of information on the site but cannot guarantee completeness or absence of errors. The publisher accepts no liability for any decision made on the basis of the content provided." },
+      ]
+    },
+    privacy: {
+      title: "Privacy Policy",
+      sections: [
+        { h: "1. Data controller", p: "VETSMANY Vilayvanh Celine — Email: support.keen@gmail.com" },
+        { h: "2. Data we collect", p: "When you make a purchase: email address (for order confirmation) and payment information processed entirely by Stripe. When you use the questionnaire: your answers and archetype result. We do not collect sensitive data." },
+        { h: "3. How we use your data", p: "Your data is used solely to process and confirm your order, deliver access to the product, send your order confirmation, and improve the product using aggregated anonymized insights. We do not sell or share your data with third parties for marketing purposes." },
+        { h: "4. Legal basis", p: "Contract performance (Art. 6.1.b GDPR) for order processing. Legitimate interest (Art. 6.1.f GDPR) for product improvement using anonymized data." },
+        { h: "5. Data retention", p: "Order-related data is retained for 3 years from the date of purchase. Anonymized questionnaire data may be retained indefinitely for research purposes." },
+        { h: "6. Third-party processors", p: "Stripe — secure payment processing (stripe.com/privacy). Vercel — site hosting (vercel.com/legal/privacy-policy). These processors are contractually bound to protect your data." },
+        { h: "7. Your rights", p: "You have the right to access, correct, erase, and port your data, and to object to processing. Email us at support.keen@gmail.com. EU/EEA residents may lodge a complaint with the CNIL (cnil.fr). California residents (CCPA): we do not sell personal information." },
+        { h: "8. Security", p: "All payments are handled by Stripe (PCI-DSS certified). Our site is served over HTTPS." },
+        { h: "9. Cookies", p: "We use strictly necessary cookies for site functionality and Stripe cookies for payment processing. We do not use advertising or tracking cookies." },
+        { h: "10. Children's privacy", p: "Keen is intended for adults. We do not knowingly collect data from individuals under 16." },
+      ]
+    }
+  };
+
+  const LegalModal = () => {
+    if (!legalModal) return null;
+    const doc = LEGAL_CONTENT[legalModal];
+    return (
+      <div onClick={() => setLegalModal(null)} style={{position:"fixed", inset:0, background:"rgba(0,0,0,0.92)", display:"flex", alignItems:"center", justifyContent:"center", zIndex:2000, padding:"1rem"}}>
+        <div onClick={e => e.stopPropagation()} style={{background:C.card, border:`1px solid ${C.border}`, borderRadius:16, padding:"2rem", maxWidth:620, width:"100%", maxHeight:"85vh", overflowY:"auto", position:"relative"}}>
+          <button onClick={() => setLegalModal(null)} style={{position:"absolute", top:14, right:18, background:"transparent", border:"none", color:C.muted, fontSize:20, cursor:"pointer"}}>✕</button>
+          <h2 style={{fontSize:18, fontWeight:600, color:C.text, marginBottom:24, fontFamily:"Georgia,serif"}}>{doc.title}</h2>
+          {doc.sections.map((s, i) => (
+            <div key={i} style={{marginBottom:20}}>
+              <p style={{fontSize:11, fontWeight:700, color:C.accent, marginBottom:6, letterSpacing:"0.05em", textTransform:"uppercase"}}>{s.h}</p>
+              <p style={{fontSize:13, color:C.muted, lineHeight:1.7, whiteSpace:"pre-line"}}>{s.p}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  };
+
+  const Footer = () => (
+    <div style={{borderTop:`1px solid ${C.border}`, marginTop:48, padding:"24px 0 32px", textAlign:"center"}}>
+      <p style={{fontSize:11, color:C.dim, marginBottom:12}}>Questions? <a href="mailto:support.keen@gmail.com" style={{color:C.muted, textDecoration:"none"}}>support.keen@gmail.com</a></p>
+      <div style={{display:"flex", justifyContent:"center", gap:24}}>
+        {[["Terms & Conditions","terms"],["Legal Notice","legal"],["Privacy Policy","privacy"]].map(([label, key]) => (
+          <button key={key} onClick={() => setLegalModal(key)} style={{background:"none", border:"none", color:C.dim, fontSize:11, cursor:"pointer", textDecoration:"underline", padding:0}}>
+            {label}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+
   if (phase==="intro") return (
     <div style={{minHeight:"100vh", width:"100%", background:C.bg, color:C.text, fontFamily:"Georgia,serif", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", padding:"2rem 1rem", boxSizing:"border-box"}}>
+      <LegalModal/>
       <div style={{maxWidth:560, width:"100%", textAlign:"center"}}>
         {/* KEEN branding */}
         <div style={{marginBottom:40}}>
@@ -1226,8 +1346,11 @@ export default function App() {
         <h1 style={{fontSize:"clamp(28px,5vw,46px)", fontWeight:400, letterSpacing:"-0.02em", marginBottom:12, lineHeight:1.2}}>
           What kind of trader<br/><span style={{color:C.accent}}>are you, really?</span>
         </h1>
-        <p style={{color:C.muted, fontSize:15, lineHeight:1.75, marginBottom:36, fontFamily:"sans-serif"}}>
-          40 general psychology questions — to reveal your deep trader profile and the biases that will sabotage your performance.
+        <p style={{color:C.muted, fontSize:15, lineHeight:1.75, marginBottom:20, fontFamily:"sans-serif"}}>
+          40 general psychology questions — no trading questions — to reveal your deep trader profile and the biases that will sabotage your performance.
+        </p>
+        <p style={{color:C.dim, fontSize:13, lineHeight:1.7, marginBottom:36, fontFamily:"sans-serif", maxWidth:480, margin:"0 auto 36px"}}>
+          Most traders fail not because of a bad strategy — but because they trade with the wrong one for their psychology. Keen identifies who you actually are as a trader, not who you think you are.
         </p>
         <div style={{display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:12, marginBottom:36}}>
           {[["⏱","12–15 min","Estimated time"],["🔬","8 dimensions","Psychometric"],["📈","Full guide","Included in premium"]].map(([icon,label,sub]) => (
@@ -1244,12 +1367,14 @@ export default function App() {
         <button onClick={() => setPhase("quiz")} style={{background:C.accent, color:"#0A0A0F", border:"none", borderRadius:10, padding:"16px 52px", fontSize:16, fontWeight:700, cursor:"pointer", letterSpacing:"0.05em", fontFamily:"sans-serif"}}>
           START THE ASSESSMENT
         </button>
+        <Footer/>
       </div>
     </div>
   );
 
   return (
     <div style={{minHeight:"100vh", width:"100%", background:C.bg, color:C.text, fontFamily:"sans-serif", display:"flex", flexDirection:"column", alignItems:"center", padding:"2rem 1rem", boxSizing:"border-box"}}>
+      <LegalModal/>
       {/* KEEN branding */}
       <div style={{textAlign:"center", marginBottom:32}}>
         <div style={{fontSize:20, fontWeight:700, letterSpacing:"0.25em", color:C.text, fontFamily:"'Satoshi', sans-serif"}}>KEEN</div>
@@ -1283,6 +1408,7 @@ export default function App() {
           </div>
         </div>
       )}
+      <Footer/>
     </div>
   );
 }
