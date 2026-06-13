@@ -1364,6 +1364,9 @@ export default function App() {
         <p style={{fontSize:12, color:C.dim, fontFamily:"sans-serif", marginBottom:28, lineHeight:1.6}}>
           💡 Answer instinctively. We also measure your response time and hesitations.
         </p>
+        <p style={{fontSize:12, color:C.dim, fontFamily:"sans-serif", marginBottom:14}}>
+          Full premium results unlocked after the assessment — 14.90€
+        </p>
         <button onClick={() => setPhase("quiz")} style={{background:C.accent, color:"#0A0A0F", border:"none", borderRadius:10, padding:"16px 52px", fontSize:16, fontWeight:700, cursor:"pointer", letterSpacing:"0.05em", fontFamily:"sans-serif"}}>
           START THE ASSESSMENT
         </button>
